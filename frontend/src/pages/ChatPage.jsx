@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import useAuthUser from "../hooks/useAuthUser";
 import { useQuery } from "@tanstack/react-query";
@@ -16,6 +16,8 @@ import {
 import { StreamChat } from "stream-chat";
 import toast from "react-hot-toast";
 
+import "stream-chat-react/dist/css/v2/index.css";
+
 import ChatLoader from "../components/ChatLoader";
 import CallButton from "../components/CallButton";
 
@@ -26,26 +28,37 @@ const ChatPage = () => {
 
   const [chatClient, setChatClient] = useState(null);
   const [channel, setChannel] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const initializingRef = useRef(false);
 
   const { authUser } = useAuthUser();
 
   const { data: tokenData } = useQuery({
     queryKey: ["streamToken"],
     queryFn: getStreamToken,
-    enabled: !!authUser, // this will run only when authUser is available
+    enabled: !!authUser,
   });
 
   useEffect(() => {
+    if (!tokenData?.token || !authUser || !STREAM_API_KEY || !targetUserId) {
+      return;
+    }
+
+    // Prevent multiple simultaneous initializations
+    if (initializingRef.current) {
+      return;
+    }
+
+    initializingRef.current = true;
+
     const initChat = async () => {
-      if (!tokenData?.token || !authUser) return;
-
       try {
-        console.log("Initializing stream chat client...");
+        console.log("Initializing chat...");
 
-        const client = StreamChat.getInstance(STREAM_API_KEY);
+        // Create new client instance
+        const client = new StreamChat(STREAM_API_KEY);
 
-        await client.connectUser(
+        // Connect user and wait for connection to be ready
+        const connectionPromise = client.connectUser(
           {
             id: authUser._id,
             name: authUser.fullName,
@@ -54,31 +67,49 @@ const ChatPage = () => {
           tokenData.token
         );
 
-        //
+        // Wait for connection to be established
+        await connectionPromise;
+        
+        // Additional wait to ensure client is fully ready
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        console.log("User connected:", client.userID);
+
+        // Create and watch channel
         const channelId = [authUser._id, targetUserId].sort().join("-");
-
-        // you and me
-        // if i start the chat => channelId: [myId, yourId]
-        // if you start the chat => channelId: [yourId, myId]  => [myId,yourId]
-
         const currChannel = client.channel("messaging", channelId, {
           members: [authUser._id, targetUserId],
         });
 
         await currChannel.watch();
+        console.log("Channel ready");
 
+        // Set state only after everything is ready
         setChatClient(client);
         setChannel(currChannel);
-      } catch (error) {
-        console.error("Error initializing chat:", error);
-        toast.error("Could not connect to chat. Please try again.");
+      } catch (err) {
+        console.error("Chat initialization error:", err);
+        toast.error("Failed to load chat");
       } finally {
-        setLoading(false);
+        initializingRef.current = false;
       }
     };
 
     initChat();
-  }, [tokenData, authUser, targetUserId]);
+
+    // Cleanup function
+    return () => {
+      if (chatClient && chatClient.userID) {
+        chatClient.disconnectUser().then(() => {
+          console.log("User disconnected");
+        }).catch(err => {
+          console.error("Disconnect error:", err);
+        });
+      }
+      setChatClient(null);
+      setChannel(null);
+    };
+  }, [authUser?._id, tokenData?.token, targetUserId]);
 
   const handleVideoCall = () => {
     if (channel) {
@@ -92,7 +123,15 @@ const ChatPage = () => {
     }
   };
 
-  if (loading || !chatClient || !channel) return <ChatLoader />;
+  // Show loader while initializing
+  if (!chatClient || !channel) {
+    return <ChatLoader />;
+  }
+
+  // Double-check client is ready before rendering Chat component
+  if (!chatClient.userID) {
+    return <ChatLoader />;
+  }
 
   return (
     <div className="h-[93vh]">
@@ -112,4 +151,5 @@ const ChatPage = () => {
     </div>
   );
 };
+
 export default ChatPage;
