@@ -80,7 +80,7 @@ export async function login(req, res) {
 
 
         const isPasswordCorrect = await user.matchPassword(password);
-        if(!isPasswordCorrect) return resizeBy.status(401).json({message: "Invalid password"});
+        if(!isPasswordCorrect) return res.status(401).json({message: "Invalid password"});
 
      const token = jwt.sign({userId: user._id},process.env.JWT_SECRET_KEY, {
         expiresIn: "7d"
@@ -111,7 +111,7 @@ export async function logout(req, res) {
 export async function onboard(req, res) {
     try {
       const userId = req.user._id;
-      const {fullName, bio, nativeLanguage, location} = req.body
+      const {fullName, bio, nativeLanguage, learningLanguage, location} = req.body
 
       if(!fullName || !bio || !nativeLanguage || !learningLanguage || !location) {
         return res.status(400).json({
