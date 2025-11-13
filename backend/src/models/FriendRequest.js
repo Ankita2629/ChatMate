@@ -22,6 +22,16 @@ const friendRequestSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+const messageSchema = new mongoose.Schema(
+  {
+    senderId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    receiverId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    text: { type: String, required: true },
+    seen: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
+
 
 const FriendRequest = mongoose.model("FriendRequest", friendRequestSchema);
 

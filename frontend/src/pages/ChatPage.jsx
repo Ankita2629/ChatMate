@@ -37,6 +37,20 @@ const ChatPage = () => {
     queryFn: getStreamToken,
     enabled: !!authUser,
   });
+  useEffect(() => {
+  if (!channel) return;
+
+  const handleNewMessage = (event) => {
+    console.log("New message received:", event.message);
+    // You could also update state here to show notifications
+  };
+
+  channel.on("message.new", handleNewMessage);
+
+  return () => {
+    channel.off("message.new", handleNewMessage);
+  };
+}, [channel]);
 
   useEffect(() => {
     if (!tokenData?.token || !authUser || !STREAM_API_KEY || !targetUserId) {

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { acceptFriendRequest, getFriendRequests } from "../lib/api";
+import { acceptFriendRequest, getFriendRequests,getMessageNotifications } from "../lib/api";
 import { BellIcon, ClockIcon, MessageSquareIcon, UserCheckIcon } from "lucide-react";
 import NoNotificationsFound from "../components/NoNotificationsFound";
 
@@ -18,6 +18,15 @@ const NotificationsPage = () => {
       queryClient.invalidateQueries({ queryKey: ["friends"] });
     },
   });
+
+const { data: messageNotifications, isLoading: loadingMessages } = useQuery({
+  queryKey: ["messageNotifications"],
+  queryFn: getMessageNotifications,
+  refetchInterval: 5000, // optional: poll every 5s for live updates
+});
+
+const unseenMessages = messageNotifications?.unseenMessages || [];
+
 
   const incomingRequests = friendRequests?.incomingReqs || [];
   const acceptedRequests = friendRequests?.acceptedReqs || [];
@@ -80,6 +89,33 @@ const NotificationsPage = () => {
                 </div>
               </section>
             )}
+            {/* MESSAGE NOTIFICATIONS */}
+{unseenMessages.length > 0 && (
+  <section className="space-y-4">
+    <h2 className="text-xl font-semibold flex items-center gap-2">
+      <MessageSquareIcon className="h-5 w-5 text-info" />
+      New Messages
+      <span className="badge badge-info ml-2">{unseenMessages.length}</span>
+    </h2>
+
+    <div className="space-y-3">
+      {unseenMessages.map((msg) => (
+        <div key={msg._id} className="card bg-base-200 shadow-sm">
+          <div className="card-body p-4 flex items-center gap-3">
+            <div className="avatar w-10 h-10 rounded-full">
+              <img src={msg.senderId.profilePic} alt={msg.senderId.fullName} />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold">{msg.senderId.fullName}</h3>
+              <p className="text-sm">{msg.text}</p>
+              <p className="text-xs text-gray-500">{new Date(msg.createdAt).toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+)}
 
             {/* ACCEPTED REQS NOTIFICATONS */}
             {acceptedRequests.length > 0 && (
