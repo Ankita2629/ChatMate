@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { ShipWheelIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { axiosInstance } from "../lib/axios";
+
+import useSignUp from "../hooks/useSignUp";
 
 const SignUpPage = () => {
   const [signupData, setSignupData] = useState({
@@ -11,22 +11,19 @@ const SignUpPage = () => {
     password: "",
   });
 
-  const queryClient = useQueryClient();
-  const { mutate, isPending, error } = useMutation({
-    mutationFn: async () => {
-      const response = await axiosInstance.post("/auth/signup", signupData);
-      return response.data;
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] })
-  });
+
+  const { isPending, error, signupMutation } = useSignUp();
 
   const handleSignup = (e) => {
     e.preventDefault();
-    mutate();
+    signupMutation(signupData);
   };
 
   return (
-    <div className="h-screen flex items-center justify-center p-4 sm:p-6 md:p-8" data-theme="night">
+    <div
+      className="h-screen flex items-center justify-center p-4 sm:p-6 md:p-8"
+      data-theme="light"
+    >
       <div className="border border-primary/25 flex flex-col lg:flex-row w-full max-w-5xl mx-auto bg-base-100 rounded-xl shadow-lg overflow-hidden">
         {/* SIGNUP FORM - LEFT SIDE */}
         <div className="w-full lg:w-1/2 p-4 sm:p-8 flex flex-col">
@@ -38,25 +35,25 @@ const SignUpPage = () => {
             </span>
           </div>
 
+          {/* ERROR MESSAGE IF ANY */}
+          {error && (
+            <div className="alert alert-error mb-4">
+              <span>{error.response.data.message}</span>
+            </div>
+          )}
+
           <div className="w-full">
             <form onSubmit={handleSignup}>
               <div className="space-y-4">
                 <div>
                   <h2 className="text-xl font-semibold">Create an Account</h2>
                   <p className="text-sm opacity-70">
-                    Join ChatMate and let every hello mean something.
+                    Join ChatMate and start your language learning adventure!
                   </p>
                 </div>
 
-                {/* ERROR MESSAGE */}
-                {error && (
-                  <div className="alert alert-error">
-                    <span>{error.response?.data?.message || "Something went wrong"}</span>
-                  </div>
-                )}
-
-                {/* NAME */}
                 <div className="space-y-3">
+                  {/* FULLNAME */}
                   <div className="form-control w-full">
                     <label className="label">
                       <span className="label-text">Full Name</span>
@@ -68,10 +65,8 @@ const SignUpPage = () => {
                       value={signupData.fullName}
                       onChange={(e) => setSignupData({ ...signupData, fullName: e.target.value })}
                       required
-                      autoComplete="name"
                     />
                   </div>
-
                   {/* EMAIL */}
                   <div className="form-control w-full">
                     <label className="label">
@@ -79,15 +74,13 @@ const SignUpPage = () => {
                     </label>
                     <input
                       type="email"
-                      placeholder="John@gmail.com"
+                      placeholder="john@gmail.com"
                       className="input input-bordered w-full"
                       value={signupData.email}
                       onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
                       required
-                      autoComplete="email"
                     />
                   </div>
-
                   {/* PASSWORD */}
                   <div className="form-control w-full">
                     <label className="label">
@@ -100,7 +93,6 @@ const SignUpPage = () => {
                       value={signupData.password}
                       onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
                       required
-                      autoComplete="new-password"
                     />
                     <p className="text-xs opacity-70 mt-1">
                       Password must be at least 6 characters long
@@ -119,8 +111,15 @@ const SignUpPage = () => {
                   </div>
                 </div>
 
-                <button className="btn btn-primary w-full" type="submit" disabled={isPending}>
-                  {isPending ? "Signing up..." : "Create Account"}
+                <button className="btn btn-primary w-full" type="submit">
+                  {isPending ? (
+                    <>
+                      <span className="loading loading-spinner loading-xs"></span>
+                      Loading...
+                    </>
+                  ) : (
+                    "Create Account"
+                  )}
                 </button>
 
                 <div className="text-center mt-4">

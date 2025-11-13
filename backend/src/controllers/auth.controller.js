@@ -120,7 +120,7 @@ export async function onboard(req, res) {
                 !fullName && "fullName",
                 !bio && "bio",
                 !nativeLanguage && "location",
-                !learningLanguage && "learingLanguage",
+                !learningLanguage && "learningLanguage",
                 !location && "location",
             ].filter(Boolean),
         });
