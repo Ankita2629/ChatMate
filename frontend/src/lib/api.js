@@ -64,16 +64,14 @@ export async function getStreamToken() {
   return response.data;
 }
 
-// Fetch message notifications (unseen messages)
 export const getMessageNotifications = async () => {
   try {
-    const userId = localStorage.getItem("userId"); // adjust for your auth setup
-    const res = await fetch(`/api/notifications/messages/${userId}`);
-    if (!res.ok) throw new Error("Failed to fetch message notifications");
-    return await res.json();
+    const userId = localStorage.getItem("userId"); // make sure this is set
+    const res = await axiosInstance.get(`/notifications/messages/${userId}`);
+    return res.data;
   } catch (err) {
     console.error("Error fetching message notifications:", err);
-    throw err;
+    return [];
   }
 };
 
