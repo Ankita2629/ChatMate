@@ -24,7 +24,7 @@ const Navbar = () => {
                   ChatMate
                 </span>
                 <span className="text-lg font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-wider xs:hidden">
-                  CM
+                  ChatMate
                 </span>
               </Link>
             </div>
