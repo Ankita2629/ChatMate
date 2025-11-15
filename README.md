@@ -18,7 +18,6 @@ Connect with language partners worldwide through seamless real-time messaging an
 - [About The Project](#about-the-project)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Screenshots](#screenshots)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
