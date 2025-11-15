@@ -15,13 +15,8 @@ export const logout = async () => {
 };
 
 export const getAuthUser = async () => {
-  try {
-    const res = await axiosInstance.get("/auth/me");
-    return res.data;
-  } catch (error) {
-    console.log("Error in getAuthUser:", error);
-    return null;
-  }
+  const res = await axiosInstance.get("/auth/me");
+  return res.data; // ✅ Let React Query handle errors
 };
 
 export const completeOnboarding = async (userData) => {

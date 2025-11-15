@@ -7,12 +7,11 @@ import {
   sendFriendRequest,
 } from "../lib/api";
 import { Link } from "react-router-dom";
-import { CheckCircle, MapPin, UserPlus, Users } from "lucide-react";
+import { CheckCircle, MapPin, UserPlus, Users, ArrowRight } from "lucide-react";
 
 import { capitialize } from "../lib/utils";
 
 import FriendCard, { getLanguageFlag } from "../components/FriendCard";
-import NoFriendsFound from "../components/NoFriendsFound";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
@@ -42,61 +41,78 @@ const HomePage = () => {
     const outgoingIds = new Set();
     if (outgoingFriendReqs && outgoingFriendReqs.length > 0) {
       outgoingFriendReqs.forEach((req) => {
+       if (req?.recipient?._id) {
         outgoingIds.add(req.recipient._id);
+      }
       });
       setOutgoingRequestsIds(outgoingIds);
     }
   }, [outgoingFriendReqs]);
 
+  // Show only first 5 friends on home page
+  const displayedFriends = friends.slice(0, 5);
+
   return (
     <div className="min-h-screen bg-base-100">
       <div className="p-3 sm:p-4 md:p-6 lg:p-8">
         <div className="container mx-auto max-w-7xl space-y-6 sm:space-y-8 lg:space-y-10">
-          {/* Friends Section Header */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-            <div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
-                Your Friends
-              </h2>
-              <p className="text-xs sm:text-sm text-base-content/70 mt-1">
-                {friends.length} {friends.length === 1 ? "friend" : "friends"}
-              </p>
-            </div>
-            <Link 
-              to="/notifications" 
-              className="btn btn-outline btn-sm sm:btn-md w-full sm:w-auto"
-            >
-              <Users className="size-4" />
-              <span className="hidden sm:inline">Friend Requests</span>
-              <span className="sm:hidden">Requests</span>
-            </Link>
-          </div>
+          {/* Quick Friends Preview Section */}
+          {friends.length > 0 && (
+            <section>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <div>
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
+                    Your Friends
+                  </h2>
+                  <p className="text-xs sm:text-sm text-base-content/70 mt-1">
+                    {friends.length} {friends.length === 1 ? "friend" : "friends"} connected
+                  </p>
+                </div>
+                <Link 
+                  to="/friends" 
+                  className="btn btn-outline btn-sm sm:btn-md w-full sm:w-auto"
+                >
+                  <Users className="size-4" />
+                  <span>View All Friends</span>
+                  <ArrowRight className="size-4" />
+                </Link>
+              </div>
 
-          {/* Friends Grid */}
-          {loadingFriends ? (
-            <div className="flex justify-center py-8 sm:py-12 lg:py-16">
-              <span className="loading loading-spinner loading-md sm:loading-lg" />
-            </div>
-          ) : friends.length === 0 ? (
-            <NoFriendsFound />
-          ) : (
-            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
-              {friends.map((friend) => (
-                <FriendCard key={friend._id} friend={friend} />
-              ))}
-            </div>
+              {/* Friends Preview Grid */}
+              {loadingFriends ? (
+                <div className="flex justify-center py-8">
+                  <span className="loading loading-spinner loading-md" />
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
+                  {displayedFriends.map((friend) => (
+                    <FriendCard key={friend._id} friend={friend} />
+                  ))}
+                </div>
+              )}
+            </section>
           )}
 
           {/* Recommended Users Section */}
           <section className="pt-4 sm:pt-6 lg:pt-8">
             <div className="mb-4 sm:mb-6 lg:mb-8">
-              <div className="flex flex-col gap-2 sm:gap-3">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
-                  Meet New Learners
-                </h2>
-                <p className="text-xs sm:text-sm md:text-base text-base-content/70">
-                  Discover perfect language exchange partners based on your profile
-                </p>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                <div className="flex flex-col gap-2 sm:gap-3">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
+                    Discover Language Partners
+                  </h2>
+                  <p className="text-xs sm:text-sm md:text-base text-base-content/70">
+                    Connect with learners who match your language goals
+                  </p>
+                </div>
+                <Link 
+                  to="/notifications" 
+                  className="btn btn-primary btn-sm sm:btn-md w-full sm:w-auto"
+                >
+                  <Users className="size-4" />
+                  <span className="hidden sm:inline">Friend Requests</span>
+                  <span className="sm:hidden">Requests</span>
+                </Link>
               </div>
             </div>
 
@@ -191,7 +207,7 @@ const HomePage = () => {
                               <span className="text-xs sm:text-sm hidden xs:inline">
                                 Send Friend Request
                               </span>
-                              <span className="text-xs sm:text-sm xs:hidden">
+                              <span className="text-xs sm:text-sm xs:inline">
                                 Add Friend
                               </span>
                             </>

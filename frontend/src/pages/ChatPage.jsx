@@ -38,11 +38,13 @@ const ChatPage = () => {
     queryFn: getStreamToken,
     enabled: !!authUser,
   });
-useEffect(() => {
-  if ("Notification" in window && Notification.permission === "default") {
-    Notification.requestPermission();
-  }
-}, []);
+
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
+
   // Initialize chat
   useEffect(() => {
     if (!tokenData?.token || !authUser || !STREAM_API_KEY || !targetUserId) return;
@@ -137,10 +139,18 @@ useEffect(() => {
               </div>
             </div>
             <div className="min-w-0">
-              <p className="font-semibold text-base-content text-sm sm:text-base truncate">{friend.name}</p>
+              <p className="font-semibold text-base-content text-sm sm:text-base truncate">
+                {friend.name}
+              </p>
               <p className="text-xs text-base-content/60 flex items-center gap-1">
-                <span className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${friend.online ? "bg-success" : "bg-base-300"}`}></span>
-                <span className="truncate">{friend.online ? "Active now" : "Offline"}</span>
+                <span 
+                  className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
+                    friend.online ? "bg-success" : "bg-base-300"
+                  }`}
+                />
+                <span className="truncate">
+                  {friend.online ? "Active now" : "Offline"}
+                </span>
               </p>
             </div>
           </div>

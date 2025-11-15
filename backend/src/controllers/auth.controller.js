@@ -59,11 +59,11 @@ export async function signup(req, res) {
         secure: process.env.NODE_ENV === "production"
      });
 
-     res.status(201).json({success:true, user:newUser})
+     res.status(201).json({success:true, user:newUser, token}) // ✅ CHANGED: Added token
 
    } catch (error){
     console.log("Error in signup controller", error);
-    res.status(500).json({message: "Internal Server Errir"});
+    res.status(500).json({message: "Internal Server Error"});
    }
 }
 
@@ -93,7 +93,7 @@ export async function login(req, res) {
         secure: process.env.NODE_ENV === "production"
      });
 
-     res.status(200).json({ success: true, user});
+     res.status(200).json({ success: true, user, token}); // ✅ CHANGED: Added token
 
 
     } catch (error) {
@@ -149,4 +149,33 @@ export async function onboard(req, res) {
         console.error("Onboarding error:", error);
         res.status(500).json({ message: "Internal Server Error"});
     }
+}
+
+// ✅ NEW: Add this function
+export async function getMe(req, res) {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ 
+      success: true,
+      user: {
+        _id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        profilePic: user.profilePic,
+        bio: user.bio,
+        nativeLanguage: user.nativeLanguage,
+        learningLanguage: user.learningLanguage,
+        location: user.location,
+        isOnboarded: user.isOnboarded,
+      }
+    });
+  } catch (error) {
+    console.error("Error in getMe:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 }
