@@ -7,8 +7,7 @@
 
 Connect with language partners worldwide through seamless real-time messaging and video calls
 
-[Live Demo](https://chatmate-wfdy.onrender.com/) • [Report Bug](https://github.com/Ankita2629/ChatMate/issues) • [Request Feature](https://github.com/Ankita2629/ChatMate/issues)
-
+[Live Demo](https://chatmate-wfdy.onrender.com/)
 </div>
 
 ---
