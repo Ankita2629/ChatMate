@@ -2,6 +2,7 @@
 
 <div align="center">
 
+![ChatMate Landing Page](https://github.com/Ankita2629/ChatMate/blob/main/frontend/images/image1.png)
 
 **Real-Time Messaging and Video Call App**
 
@@ -9,24 +10,6 @@ Connect with language partners worldwide through seamless real-time messaging an
 
 [Live Demo](https://chatmate-wfdy.onrender.com/)
 </div>
-
----
-
-## 📋 Table of Contents
-
-- [About The Project](#about-the-project)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Environment Variables](#environment-variables)
-- [Usage](#usage)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-- [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -41,10 +24,12 @@ Whether you're learning a language, collaborating on a project, or just connecti
 - 🔐 **Secure Authentication** - User registration and login with JWT & cookies
 - 💬 **Real-Time Messaging** - Instant messaging via Stream Chat API
 - 📹 **Video Calls** - Secure video calls with screen sharing & camera control
+- 🖥️ **Screen Sharing** - Share your screen during video calls with participants
 - 🎥 **Call Recording** - Option to record calls (stream-compatible)
 - 🧑‍🤝‍🧑 **Friend System** - Send and accept friend requests
 - 🧠 **Smart Matching** - Profile-based language learner matching
 - 🌍 **Discovery** - Find users by native & learning language preferences
+- 🎨 **Theme Customization** - Multiple color palettes for personalized UI experience
 - 🖼️ **Auto Avatars** - Automatically generated profile avatars
 - 🔔 **Notifications** - Real-time notifications and updates
 - 📱 **Responsive Design** - Fully responsive modern UI
@@ -60,11 +45,43 @@ Whether you're learning a language, collaborating on a project, or just connecti
 | 🔔 **Notifications** | Get notified when you receive requests or messages |
 | 🧱 **Discover Page** | Explore other users by language and location |
 | 📞 **Video Calls** | One-on-one video calls using Stream Video with room ID routing |
-| 🖥️ **Screen Sharing** | Share your screen during video calls (host-enabled) |
+| 🖥️ **Screen Sharing** | Share your screen during video calls with full participant view |
 | 🎧 **Media Controls** | Easily toggle camera/microphone in calls |
 | 🎥 **Call Recording** | Optional feature to record video call sessions |
 | 🌐 **Real-Time Chat** | Chat with friends using Stream's secure messaging SDK |
+| 🎨 **Theme Switcher** | Choose from multiple color palettes (Light, Dark, Synthwave, Forest, Aqua, Sunset, etc.) |
 | 🖼️ **Avatar Generation** | Random avatar assigned if no profile picture is uploaded |
+| 🌓 **Dark Mode Support** | Seamless dark mode integration across all themes |
+
+---
+
+## 🎨 Theme Customization
+
+ChatMate offers multiple color palettes to personalize your experience:
+
+- **Light** - Clean and bright interface
+- **Dark** - Easy on the eyes for night usage
+- **Synthwave** - Vibrant retro-futuristic colors
+- **Forest** - Natural green tones
+- **Aqua** - Cool blue ocean vibes
+- **Sunset** - Warm orange and pink hues
+- **Cyberpunk** - Neon-inspired design
+- **Pastel** - Soft and gentle colors
+
+Switch themes instantly from the settings menu without losing your session!
+
+---
+
+## 🖥️ Screen Sharing Features
+
+Enhanced video calling with professional screen sharing capabilities:
+
+- **Full Screen Sharing** - Share your entire screen or specific application windows
+- **Presentation Mode** - Optimized layout when screen sharing is active
+- **Participant View** - See both the shared screen and participant video feeds
+- **Host Controls** - Only authorized users can share screens
+- **Quality Settings** - Adjust resolution and frame rate for optimal performance
+- **Screen Share Toggle** - Easy one-click start/stop screen sharing
 
 ---
 
@@ -74,7 +91,7 @@ Whether you're learning a language, collaborating on a project, or just connecti
 - **React.js** - JavaScript library for building user interfaces
 - **Vite** - Next-generation frontend tooling
 - **Tailwind CSS** - Utility-first CSS framework
-- **DaisyUI** - Component library for Tailwind CSS
+- **DaisyUI** - Component library for Tailwind CSS with theme support
 - **Axios** - Promise-based HTTP client
 - **React Router DOM** - Declarative routing for React
 
@@ -88,7 +105,7 @@ Whether you're learning a language, collaborating on a project, or just connecti
 
 ### Third-Party Services
 - **Stream Chat API** - Real-time messaging infrastructure
-- **Stream Video API** - Video calling and streaming
+- **Stream Video API** - Video calling, streaming, and screen sharing
 
 ---
 
@@ -146,7 +163,8 @@ NODE_ENV=development
 1. Visit [Stream.io](https://getstream.io/)
 2. Create a free account
 3. Create a new app
-4. Copy your API Key and Secret from the dashboard
+4. Enable Video & Screen Sharing features in your dashboard
+5. Copy your API Key and Secret from the dashboard
 
 ---
 
@@ -181,8 +199,9 @@ Open your browser and navigate to `http://localhost:5173`
 1. Click on "Create one" on the login page
 2. Fill in your details (name, email, password)
 3. Set your native and learning languages
-4. Click "Sign Up"
-5. You'll be automatically logged in
+4. Choose your preferred theme from the settings
+5. Click "Sign Up"
+6. You'll be automatically logged in
 
 ### Making Friends
 
@@ -191,12 +210,23 @@ Open your browser and navigate to `http://localhost:5173`
 3. Send friend requests
 4. Once accepted, start chatting!
 
-### Starting a Video Call
+### Starting a Video Call with Screen Sharing
 
 1. Open a chat with a friend
 2. Click the video call icon
 3. Share the call link with your friend
-4. Enjoy your video conversation with screen sharing options
+4. Once connected, click the "Share Screen" button to present
+5. Select which screen or window to share
+6. Toggle screen sharing on/off as needed
+7. Enjoy your video conversation with professional presentation capabilities
+
+### Customizing Your Theme
+
+1. Click on the settings icon in the navigation bar
+2. Select "Theme Preferences"
+3. Browse through available color palettes
+4. Click on any theme to apply it instantly
+5. Your preference is saved automatically
 
 ---
 
@@ -272,10 +302,10 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 🙏 Acknowledgments
 
-- [Stream.io](https://getstream.io/) - For their amazing Chat and Video APIs
+- [Stream.io](https://getstream.io/) - For their amazing Chat and Video APIs with screen sharing
 - [React](https://reactjs.org/) - For the awesome frontend framework
 - [Tailwind CSS](https://tailwindcss.com/) - For the utility-first CSS framework
-- [DaisyUI](https://daisyui.com/) - For beautiful UI components
+- [DaisyUI](https://daisyui.com/) - For beautiful UI components and theme system
 - [MongoDB](https://www.mongodb.com/) - For the flexible database solution
 
 ---
